@@ -1,5 +1,6 @@
-﻿System.Console.OutputEncoding = System.Text.Encoding.Unicode;
+﻿using Newtonsoft.Json;
 
+System.Console.OutputEncoding = System.Text.Encoding.Unicode;
 
 int maxCount = 0;
 while (true)
@@ -146,7 +147,7 @@ while (true)
                     //Створення через рядок
                     case "3":
                         Console.WriteLine(
-                            "Введіть інформацію про відеокарту в форматі \"Назва;Архітектура;Ціна\":");
+                            "Введіть інформацію про відеокарту в форматі \"Назва;Частота;Архітектура;Розмір пам'яті;Дата релізу;Розрядність шини;Ціна\":");
                         string gpu = Console.ReadLine();
                         card = null;
 
@@ -472,7 +473,7 @@ while (true)
                     //Метод TryParse
                     case "3":
                         Console.WriteLine(
-                            "Введіть інформацію про відеокарту в форматі \"Назва;Архітектура;Ціна\":");
+                            "Введіть інформацію про відеокарту в форматі \"Назва;Частота;Архітектура;Розмір пам'яті;Дата релізу;Розрядність шини;Ціна\":");
                         string gpu = Console.ReadLine();
                         Gpu testcase = null;
 
@@ -484,7 +485,6 @@ while (true)
                         }
 
                         break;
-
 
                     //Назад
                     case "0":
