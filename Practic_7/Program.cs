@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Globalization;
+using Newtonsoft.Json;
 
 System.Console.OutputEncoding = System.Text.Encoding.Unicode;
 
@@ -599,4 +600,54 @@ public static partial class Program
         return removedCount;
     }
 
+    //Серіалізація і десеріалізація csv
+    public static void SaveToFileCSV(List<Gpu> list, string filePath)
+    {
+        List<string> lines = new List<string>();
+
+        foreach (var gpu in list)
+        {
+            lines.Add(gpu.ToString());
+        }
+
+        try
+        {
+            File.WriteAllLines(filePath, lines);
+            Console.WriteLine($"Дані збережено CSV-файлу у {Path.GetFullPath(filePath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    public static List<Gpu> ReadFromFileCSV(string filePath)
+    {
+        List<Gpu> gpus = new List<Gpu>();
+
+        try
+        {
+            List<string> lines = new List<string>();
+
+            lines = File.ReadAllLines(filePath).ToList();
+
+            foreach (var line in lines)
+            {
+                bool result = Gpu.TryParse(line, out Gpu? gpu);
+
+                if (result)
+                    gpus.Add(gpu);
+            }
+        }
+        catch (IOException ex)
+        {
+            Console.WriteLine($"Помилка при читанні CSV-файлу: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+        return gpus;
+    }
 }
