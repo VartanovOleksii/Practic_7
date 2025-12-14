@@ -502,14 +502,83 @@ while (true)
 
         //Зберегти колекцію об'єктів у файлі
         case "7":
-            break;
+            if (Gpu.Counter == 0)
+            {
+                Console.WriteLine("Додайте об'єкти для збереження");
+                break;
+            }
+
+            while (true)
+            {
+                Console.WriteLine("\n==== МЕНЮ ====");
+                Console.WriteLine("1 - Зберегти у файл *.csv");
+                Console.WriteLine("2 - Зберегти у файл *.json");
+                Console.WriteLine("0 - Назад");
+                Console.Write("Ваш вибір -> ");
+
+                string staticchoice = Console.ReadLine();
+                Console.WriteLine();
+
+                switch (staticchoice)
+                {
+                    //Зберегти у файл *.csv
+                    case "1":
+                        break;
+
+                    //Зберегти у файл *.json
+                    case "2":
+                        break;
+
+                    //Назад
+                    case "0":
+                        goto start_of_loop;
+
+                    default:
+                        Console.WriteLine("Неправильний вибір, спробуйте знову.");
+                        break;
+                }
+            }
 
         //Зчитати колекцію об'єктів з файлу
         case "8":
-            break;
+            while (true)
+            {
+                Console.WriteLine("\n==== МЕНЮ ====");
+                Console.WriteLine("1 - Зчитати з файлу *.csv");
+                Console.WriteLine("2 - Зчитати з файлу *.json");
+                Console.WriteLine("0 - Назад");
+                Console.Write("Ваш вибір -> ");
+
+                string staticchoice = Console.ReadLine();
+                Console.WriteLine();
+
+                switch (staticchoice)
+                {
+                    //Зчитати з файлу *.csv
+                    case "1":
+                        break;
+
+                    //Зчитати з файлу *.json
+                    case "2":
+                        break;
+
+                    //Назад
+                    case "0":
+                        goto start_of_loop;
+
+                    default:
+                        Console.WriteLine("Неправильний вибір, спробуйте знову.");
+                        break;
+                }
+            }
 
         //Очистити колекцію об'єктів
         case "9":
+            gpus.Clear();
+            while (Gpu.Counter > 0)
+            {
+                Gpu.DecrementCounter();
+            }
             break;
 
         //Вихід
