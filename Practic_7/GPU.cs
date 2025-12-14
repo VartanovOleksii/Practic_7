@@ -216,12 +216,12 @@ public class Gpu
 
 
     //Конструктори
-    public Gpu() : this(DefName, DefClock, DefArchitecture, DefMemory, DateTime.MinValue, DefBus, DefPrice)
+    public Gpu() : this(DefName, DefClock, DefArchitecture, DefMemory, DateTime.Parse("01.01.1999"), DefBus, DefPrice)
     {
 
     }
 
-    public Gpu(string modelName, GPUArchitecture architecture, decimal launchPrice) : this(modelName, DefClock, architecture, DefMemory, DateTime.MinValue, DefBus, launchPrice)
+    public Gpu(string modelName, GPUArchitecture architecture, decimal launchPrice) : this(modelName, DefClock, architecture, DefMemory, DateTime.Parse("01.01.1999"), DefBus, launchPrice)
     {
 
     }
