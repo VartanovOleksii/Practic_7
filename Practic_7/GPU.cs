@@ -243,7 +243,7 @@ public class Gpu
     //Parse та TryParce
     public override string ToString()
     {
-        return $"{ModelName};{Architecture};{LaunchPrice}";
+        return $"{ModelName};{GpuClock};{Architecture};{MemorySize};{ReleaseDate.ToShortDateString()};{MemoryBusWidth};{LaunchPrice}";
     }
 
     public static Gpu Parse(string s)
@@ -253,19 +253,40 @@ public class Gpu
 
         string[] part = s.Split(';');
 
-        if (part.Length != 3)
+        if (part.Length != 7)
             throw new FormatException("Строка неправильного формату.");
 
+        int clock;
+
+        if (!int.TryParse(part[1], out clock))
+            throw new ArgumentException("Значення частоти некоректне.");
+
         GPUArchitecture arch;
+
+        if (!Enum.TryParse<GPUArchitecture>(part[2], true, out arch))
+            throw new InvalidEnumArgumentException("Архітектура некоректна.");
+
+        int size;
+
+        if (!int.TryParse(part[3], out size))
+            throw new ArgumentException("Значення розміру пам'яті некоректне.");
+
+        DateTime release;
+
+        if (!DateTime.TryParse(part[4], out release))
+            throw new ArgumentException("Дата некоректна.");
+
+        short width;
+
+        if (!short.TryParse(part[5], out width))
+            throw new ArgumentException("Значення розрядності пам'яті некоректне.");
+
         decimal price;
 
-        if (!Enum.TryParse<GPUArchitecture>(part[1], true, out arch))
-            throw new InvalidEnumArgumentException("Архітектура не коректна.");
-
-        if (!decimal.TryParse(part[2], out price))
+        if (!decimal.TryParse(part[6], out price))
             throw new ArgumentException("Значення ціни не коректне.");
 
-        return new Gpu(part[0], arch, price);
+        return new Gpu(part[0], clock, arch, size, release,width, price);
     }
 
     public static bool TryParse(string s, out Gpu gpu)

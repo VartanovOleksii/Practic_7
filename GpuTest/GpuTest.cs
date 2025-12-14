@@ -353,10 +353,14 @@
         {
             //Arrange
             gpu.ModelName = "Gigabyte GeForce RTX 5060 Ti";
+            gpu.GpuClock = 2647;
             gpu.Architecture = GPUArchitecture.Blackwell;
+            gpu.MemorySize = 16;
+            gpu.ReleaseDate = DateTime.Parse("01.04.2025");
+            gpu.MemoryBusWidth = 128;
             gpu.LaunchPrice = 470;
 
-            string expected = "Gigabyte GeForce RTX 5060 Ti;Blackwell;470";
+            string expected = "Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;01.04.2025;128;470";
 
             //Act
             string actual = gpu.ToString();
@@ -380,7 +384,11 @@
         [TestMethod]
         [DataRow("asdasd")]
         [DataRow("asdasd;asdasd")]
+        [DataRow("asdasd;asdasd;asdasd")]
         [DataRow("asdasd;asdasd;asdasd;asdasd")]
+        [DataRow("asdasd;asdasd;asdasd;asdasd;asdasd")]
+        [DataRow("asdasd;asdasd;asdasd;asdasd;asdasd;asdasd")]
+        [DataRow("asdasd;asdasd;asdasd;asdasd;asdasd;asdasd;asdasd;asdasd")]
         public void Parse_incorrect_format(string s)
         {
             //Arrange
@@ -392,9 +400,40 @@
         }
 
         [TestMethod]
-        [DataRow("asdasd;;100")]
-        [DataRow("asdasd;asdasd;100")]
-        [DataRow("asdasd;20;100")]
+        [DataRow(";2647;Blackwell;16;01.04.2025;128;470")]
+        [DataRow("asd;2647;Blackwell;16;01.04.2025;128;470")]
+        [DataRow("asdasdasdaasdasdasdaasdasdasdaasdasdasdaasd;2647;Blackwell;16;01.04.2025;128;470")]
+        [DataRow("фівфів;2647;Blackwell;16;01.04.2025;128;470")]
+        [DataRow("/asdasd;2647;Blackwell;16;01.04.2025;128;470")]
+        public void Parse_incorrect_name(string s)
+        {
+            //Arrange
+
+            //Act
+
+            //Assert
+            Assert.Throws<ArgumentException>(() => Gpu.Parse(s));
+        }
+
+        [TestMethod]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;;Blackwell;16;01.04.2025;128;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;asd;Blackwell;16;01.04.2025;128;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;10;Blackwell;16;01.04.2025;128;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;10000;Blackwell;16;01.04.2025;128;470")]
+        public void Parse_incorrect_clock(string s)
+        {
+            //Arrange
+
+            //Act
+
+            //Assert
+            Assert.Throws<ArgumentException>(() => Gpu.Parse(s));
+        }
+        
+        [TestMethod]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;;16;01.04.2025;128;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Alan;16;01.04.2025;128;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;100;128;01.04.2025;128;470")]
         public void Parse_incorrect_architecture(string s)
         {
             //Arrange
@@ -406,9 +445,11 @@
         }
 
         [TestMethod]
-        [DataRow("asdasd;Turing;")]
-        [DataRow("asdasd;Turing;asd")]
-        public void Parse_incorrect_price(string s)
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;;01.04.2025;128;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;asd;01.04.2025;128;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;0;01.04.2025;128;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;128;01.04.2025;128;470")]
+        public void Parse_incorrect_size(string s)
         {
             //Arrange
 
@@ -419,12 +460,39 @@
         }
 
         [TestMethod]
-        [DataRow(";Turing;100")]
-        [DataRow("asd;Turing;100")]
-        [DataRow("asdasdasdaasdasdasdaasdasdasdaasdasdasdaasd;Turing;100")]
-        [DataRow("фівфів;Turing;100")]
-        [DataRow("/asdasd;Turing;100")]
-        public void Parse_incorrect_name(string s)
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;;128;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;asd;128;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;01.04.3025;128;470")]
+        public void Parse_incorrect_date(string s)
+        {
+            //Arrange
+
+            //Act
+
+            //Assert
+            Assert.Throws<ArgumentException>(() => Gpu.Parse(s));
+        }
+
+        [TestMethod]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;01.04.2025;;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;01.04.2025;asd;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;01.04.3025;2;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;01.04.3025;8096;470")]
+        public void Parse_incorrect_width(string s)
+        {
+            //Arrange
+
+            //Act
+
+            //Assert
+            Assert.Throws<ArgumentException>(() => Gpu.Parse(s));
+        }
+
+        [TestMethod]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;01.04.2025;128;")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;01.04.2025;128;asd")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;01.04.2025;128;0")]
+        public void Parse_incorrect_price(string s)
         {
             //Arrange
 
@@ -438,10 +506,14 @@
         public void Parse_correct()
         {
             //Arrange
-            string s = "Gigabyte GeForce RTX 5060 Ti;Blackwell;470";
+            string s = "Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;01.04.2025;128;470";
             Gpu expected = new Gpu();
             expected.ModelName = "Gigabyte GeForce RTX 5060 Ti";
+            expected.GpuClock = 2647;
             expected.Architecture = GPUArchitecture.Blackwell;
+            expected.MemorySize = 16;
+            expected.ReleaseDate = DateTime.Parse("01.04.2025");
+            expected.MemoryBusWidth = 128;
             expected.LaunchPrice = 470;
 
             //Act
@@ -449,7 +521,11 @@
 
             //Assert
             Assert.AreEqual(expected.ModelName, actual.ModelName);
+            Assert.AreEqual(expected.GpuClock, actual.GpuClock);
             Assert.AreEqual(expected.Architecture, actual.Architecture);
+            Assert.AreEqual(expected.MemorySize, actual.MemorySize);
+            Assert.AreEqual(expected.ReleaseDate, actual.ReleaseDate);
+            Assert.AreEqual(expected.MemoryBusWidth, actual.MemoryBusWidth);
             Assert.AreEqual(expected.LaunchPrice, actual.LaunchPrice);
         }
 
@@ -459,23 +535,53 @@
         //size
         [DataRow("asdasd")]
         [DataRow("asdasd;asdasd")]
+        [DataRow("asdasd;asdasd;asdasd")]
         [DataRow("asdasd;asdasd;asdasd;asdasd")]
-
-        //architecture
-        [DataRow("asdasd;;100")]
-        [DataRow("asdasd;asdasd;100")]
-        [DataRow("asdasd;20;100")]
-
-        //price
-        [DataRow("asdasd;Turing;")]
-        [DataRow("asdasd;Turing;asd")]
+        [DataRow("asdasd;asdasd;asdasd;asdasd;asdasd")]
+        [DataRow("asdasd;asdasd;asdasd;asdasd;asdasd;asdasd")]
+        [DataRow("asdasd;asdasd;asdasd;asdasd;asdasd;asdasd;asdasd;asdasd")]
 
         //name
-        [DataRow(";Turing;100")]
-        [DataRow("asd;Turing;100")]
-        [DataRow("asdasdasdaasdasdasdaasdasdasdaasdasdasdaasd;Turing;100")]
-        [DataRow("фівфів;Turing;100")]
-        [DataRow("/asdasd;Turing;100")]
+        [DataRow(";2647;Blackwell;16;01.04.2025;128;470")]
+        [DataRow("asd;2647;Blackwell;16;01.04.2025;128;470")]
+        [DataRow("asdasdasdaasdasdasdaasdasdasdaasdasdasdaasd;2647;Blackwell;16;01.04.2025;128;470")]
+        [DataRow("фівфів;2647;Blackwell;16;01.04.2025;128;470")]
+        [DataRow("/asdasd;2647;Blackwell;16;01.04.2025;128;470")]
+
+        //clock
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;;Blackwell;16;01.04.2025;128;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;asd;Blackwell;16;01.04.2025;128;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;10;Blackwell;16;01.04.2025;128;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;10000;Blackwell;16;01.04.2025;128;470")]
+
+        //architecture
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;;16;01.04.2025;128;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Alan;16;01.04.2025;128;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;100;128;01.04.2025;128;470")]
+
+        //size
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;;01.04.2025;128;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;asd;01.04.2025;128;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;0;01.04.2025;128;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;128;01.04.2025;128;470")]
+
+        //date
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;;128;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;asd;128;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;01.04.3025;128;470")]
+
+        //width
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;01.04.2025;;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;01.04.2025;asd;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;01.04.3025;2;470")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;01.04.3025;8096;470")]
+
+        //price
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;01.04.2025;128;")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;01.04.2025;128;asd")]
+        [DataRow("Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;01.04.2025;128;0")]
+
+
         public void TryParse_incorrect(string s)
         {
             //Arrange
@@ -495,10 +601,14 @@
             //Arrange
             Gpu parsedGpu = null;
             Gpu expected = new Gpu();
-            string s = "Gigabyte GeForce RTX 5060 Ti;Blackwell;470";
+            string s = "Gigabyte GeForce RTX 5060 Ti;2647;Blackwell;16;01.04.2025;128;470";
 
             expected.ModelName = "Gigabyte GeForce RTX 5060 Ti";
+            expected.GpuClock = 2647;
             expected.Architecture = GPUArchitecture.Blackwell;
+            expected.MemorySize = 16;
+            expected.ReleaseDate = DateTime.Parse("01.04.2025");
+            expected.MemoryBusWidth = 128;
             expected.LaunchPrice = 470;
 
             //Act
@@ -509,7 +619,11 @@
             Assert.IsNotNull(parsedGpu);
 
             Assert.AreEqual(expected.ModelName, parsedGpu.ModelName);
+            Assert.AreEqual(expected.GpuClock, parsedGpu.GpuClock);
             Assert.AreEqual(expected.Architecture, parsedGpu.Architecture);
+            Assert.AreEqual(expected.MemorySize, parsedGpu.MemorySize);
+            Assert.AreEqual(expected.ReleaseDate, parsedGpu.ReleaseDate);
+            Assert.AreEqual(expected.MemoryBusWidth, parsedGpu.MemoryBusWidth);
             Assert.AreEqual(expected.LaunchPrice, parsedGpu.LaunchPrice);
         }
     }
