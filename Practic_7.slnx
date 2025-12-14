@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="GpuTest/GpuTest.csproj" />
+  <Project Path="Practic_7/Practic_7.csproj" />
+</Solution>
