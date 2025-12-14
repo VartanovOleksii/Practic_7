@@ -26,6 +26,9 @@ while (true)
     Console.WriteLine("4 - Демонстрація поведінки");
     Console.WriteLine("5 - Видалити об'єкт");
     Console.WriteLine("6 - Демонстрація static-методів");
+    Console.WriteLine("7 - Зберегти колекцію об'єктів у файлі");
+    Console.WriteLine("8 - Зчитати колекцію об'єктів з файлу");
+    Console.WriteLine("9 - Очистити колекцію об'єктів");
     Console.WriteLine("0 - Вихід");
     Console.Write("Ваш вибір -> ");
 
@@ -496,6 +499,18 @@ while (true)
                         break;
                 }
             }
+
+        //Зберегти колекцію об'єктів у файлі
+        case "7":
+            break;
+
+        //Зчитати колекцію об'єктів з файлу
+        case "8":
+            break;
+
+        //Очистити колекцію об'єктів
+        case "9":
+            break;
 
         //Вихід
         case "0":
