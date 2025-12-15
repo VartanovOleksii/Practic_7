@@ -1,5 +1,6 @@
-﻿using System.Globalization;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.Globalization;
+using System.Text;
 
 System.Console.OutputEncoding = System.Text.Encoding.Unicode;
 
@@ -523,7 +524,11 @@ while (true)
                 {
                     //Зберегти у файл *.csv
                     case "1":
+                        string filePath = FileNameValidation(".csv");
+
+                        SaveToFileCSV(gpus, filePath);
                         break;
+
 
                     //Зберегти у файл *.json
                     case "2":
@@ -556,6 +561,17 @@ while (true)
                 {
                     //Зчитати з файлу *.csv
                     case "1":
+                        string filePath = FileNameValidation(".csv");
+
+                        List<Gpu> newGpus = ReadFromFileCSV(filePath);
+                        int count = newGpus.Count;
+                        Console.WriteLine($"Було зчитано {count} об'єктів:");
+
+                        foreach (Gpu gpu in newGpus)
+                        {
+                            Console.WriteLine(gpu.PrintInfo());
+                        }
+
                         break;
 
                     //Зчитати з файлу *.json
@@ -687,7 +703,9 @@ public static partial class Program
     //Серіалізація і десеріалізація csv
     public static void SaveToFileCSV(List<Gpu> list, string filePath)
     {
-        List<string> lines = new List<string>();
+        string header = "Назва;Частота;Архітектура;Розмір пам'яті;Дата релізу;Розрядність шини;Ціна";
+
+        List<string> lines = new List<string> { header };
 
         foreach (var gpu in list)
         {
@@ -696,7 +714,7 @@ public static partial class Program
 
         try
         {
-            File.WriteAllLines(filePath, lines);
+            File.WriteAllLines(filePath, lines, Encoding.UTF8);
             Console.WriteLine($"Дані збережено CSV-файлу у {Path.GetFullPath(filePath)}");
         }
         catch (Exception ex)
@@ -715,9 +733,9 @@ public static partial class Program
 
             lines = File.ReadAllLines(filePath).ToList();
 
-            foreach (var line in lines)
+            for (int i = 1; i < lines.Count; i++)
             {
-                bool result = Gpu.TryParse(line, out Gpu? gpu);
+                bool result = Gpu.TryParse(lines[i], out Gpu? gpu);
 
                 if (result)
                     gpus.Add(gpu);
@@ -733,5 +751,28 @@ public static partial class Program
         }
 
         return gpus;
+    }
+
+    //Перевірка коректності назви файлу
+    public static string FileNameValidation(string format)
+    {
+        string? name;
+
+        while (true)
+        {
+            Console.Write($"Введіть назву (*{format}): ");
+            name = Console.ReadLine();
+
+            if (string.IsNullOrEmpty(name) || !name.EndsWith(format))
+            {
+                Console.WriteLine("Введіть коректну назву файлу.");
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return name;
     }
 }
