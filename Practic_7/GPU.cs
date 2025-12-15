@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Newtonsoft.Json;
+using System.ComponentModel;
 using System.Text.RegularExpressions;
 
 public class Gpu
@@ -24,7 +25,7 @@ public class Gpu
     public const short DefBus = 128;
     public const decimal DefPrice = 0.01m;
 
-
+    [JsonIgnore]
     //Публічні властивості
     public bool InBasket { get; private set; } = true;
 

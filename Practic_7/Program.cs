@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Text;
 
 System.Console.OutputEncoding = System.Text.Encoding.Unicode;
@@ -520,11 +521,13 @@ while (true)
                 string staticchoice = Console.ReadLine();
                 Console.WriteLine();
 
+                string filePath;
+
                 switch (staticchoice)
                 {
                     //Зберегти у файл *.csv
                     case "1":
-                        string filePath = FileNameValidation(".csv");
+                        filePath = FileNameValidation(".csv");
 
                         SaveToFileCSV(gpus, filePath);
                         break;
@@ -532,6 +535,9 @@ while (true)
 
                     //Зберегти у файл *.json
                     case "2":
+                        filePath = FileNameValidation(".json");
+
+                        SaveToFileJSON(gpus, filePath);
                         break;
 
                     //Назад
@@ -557,14 +563,28 @@ while (true)
                 string staticchoice = Console.ReadLine();
                 Console.WriteLine();
 
+                string filePath;
+                int count;
+                List<Gpu> newGpus = null;
+
+                int availableSpace;
+                int itemsToAdd;
+
                 switch (staticchoice)
                 {
                     //Зчитати з файлу *.csv
                     case "1":
-                        string filePath = FileNameValidation(".csv");
+                        filePath = FileNameValidation(".csv");
 
-                        List<Gpu> newGpus = ReadFromFileCSV(filePath);
-                        int count = newGpus.Count;
+                        newGpus = ReadFromFileCSV(filePath);
+
+                        if (newGpus == null || newGpus.Count == 0)
+                        {
+                            Console.WriteLine("Було зчитано 0 об'єктів.");
+                            break;
+                        }
+
+                        count = newGpus.Count;
                         Console.WriteLine($"Було зчитано {count} об'єктів:\n");
 
                         foreach (Gpu gpu in newGpus)
@@ -572,10 +592,94 @@ while (true)
                             Console.WriteLine(gpu.PrintInfo());
                         }
 
+                        availableSpace = maxCount - gpus.Count;
+                        itemsToAdd = Math.Min(newGpus.Count, availableSpace);
+
+                        if (itemsToAdd <= 0)
+                        {
+                            Console.WriteLine($"Колекція gpus вже містить максимальну кількість ({maxCount}) елементів. Додано 0 об'єктів.");
+                            foreach (var gpu in newGpus)
+                            {
+                                Gpu.DecrementCounter();
+                            }
+                        }
+                        else
+                        {
+                            for (int i = 0; i < itemsToAdd; i++)
+                            {
+                                gpus.Add(newGpus[i]);
+                            }
+
+                            Console.WriteLine($"Було додано {itemsToAdd} об'єктів до основної колекції.");
+
+                            int excessItems = newGpus.Count - itemsToAdd;
+
+                            if (excessItems > 0)
+                            {
+                                Console.WriteLine($"Було проігноровано {excessItems} об'єктів, оскільки колекція перевищила б {maxCount}.");
+
+                                for (int i = itemsToAdd; i < newGpus.Count; i++)
+                                {
+                                    Gpu.DecrementCounter();
+                                }
+                            }
+                        }
+
                         break;
 
                     //Зчитати з файлу *.json
                     case "2":
+                        filePath = FileNameValidation(".json");
+
+                        newGpus = ReadFromFileJSON(filePath);
+
+                        if (newGpus == null || newGpus.Count == 0)
+                        {
+                            Console.WriteLine("Було зчитано 0 об'єктів.");
+                            break;
+                        }
+
+                        count = newGpus.Count;
+                        Console.WriteLine($"Було зчитано {count} об'єктів:\n");
+
+                        foreach (Gpu gpu in newGpus)
+                        {
+                            Console.WriteLine(gpu.PrintInfo());
+                        }
+
+                        availableSpace = maxCount - gpus.Count;
+                        itemsToAdd = Math.Min(newGpus.Count, availableSpace);
+
+                        if (itemsToAdd <= 0)
+                        {
+                            Console.WriteLine($"Колекція gpus вже містить максимальну кількість ({maxCount}) елементів. Додано 0 об'єктів.");
+                            foreach (var gpu in newGpus)
+                            {
+                                Gpu.DecrementCounter();
+                            }
+                        }
+                        else
+                        {
+                            for (int i = 0; i < itemsToAdd; i++)
+                            {
+                                gpus.Add(newGpus[i]);
+                            }
+
+                            Console.WriteLine($"Було додано {itemsToAdd} об'єктів до основної колекції.");
+
+                            int excessItems = newGpus.Count - itemsToAdd;
+
+                            if (excessItems > 0)
+                            {
+                                Console.WriteLine($"Було проігноровано {excessItems} об'єктів, оскільки колекція перевищила б {maxCount}.");
+
+                                for (int i = itemsToAdd; i < newGpus.Count; i++)
+                                {
+                                    Gpu.DecrementCounter();
+                                }
+                            }
+                        }
+
                         break;
 
                     //Назад
