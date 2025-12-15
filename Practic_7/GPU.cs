@@ -301,15 +301,15 @@ public class Gpu
         }
         catch (ArgumentNullException ex)
         {
-            Console.WriteLine(ex.Message);
+            
         }
         catch (FormatException ex)
         {
-            Console.WriteLine(ex.Message);
+            
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"TryParse: {ex.Message}");
+            
         }
 
         return valid;

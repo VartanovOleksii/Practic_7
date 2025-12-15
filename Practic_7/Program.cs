@@ -565,7 +565,7 @@ while (true)
 
                         List<Gpu> newGpus = ReadFromFileCSV(filePath);
                         int count = newGpus.Count;
-                        Console.WriteLine($"Було зчитано {count} об'єктів:");
+                        Console.WriteLine($"Було зчитано {count} об'єктів:\n");
 
                         foreach (Gpu gpu in newGpus)
                         {
