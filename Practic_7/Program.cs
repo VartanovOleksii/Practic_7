@@ -700,7 +700,7 @@ public static partial class Program
         return removedCount;
     }
 
-    //Серіалізація і десеріалізація csv
+    //Серіалізація і десеріалізація .csv
     public static void SaveToFileCSV(List<Gpu> list, string filePath)
     {
         string header = "Назва;Частота;Архітектура;Розмір пам'яті;Дата релізу;Розрядність шини;Ціна";
@@ -744,6 +744,43 @@ public static partial class Program
         catch (IOException ex)
         {
             Console.WriteLine($"Помилка при читанні CSV-файлу: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+
+        return gpus;
+    }
+
+    //Серіалізація і десеріалізація .json
+    public static void SaveToFileJSON(List<Gpu> list, string filePath)
+    {
+        try
+        {
+            string jsonString = JsonConvert.SerializeObject(list);
+
+            File.WriteAllText(filePath, jsonString);
+            Console.WriteLine($"Дані збережено JSON-файлу у {Path.GetFullPath(filePath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    public static List<Gpu> ReadFromFileJSON(string filePath)
+    {
+        List<Gpu> gpus = null;
+
+        try
+        {
+            string text = File.ReadAllText(filePath);
+            gpus = JsonConvert.DeserializeObject<List<Gpu>>(text);
+        }
+        catch (IOException ex)
+        {
+            Console.WriteLine($"Помилка при читанні JSON-файлу: {ex.Message}");
         }
         catch (Exception ex)
         {
